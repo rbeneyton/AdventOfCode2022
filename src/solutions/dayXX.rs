@@ -5,7 +5,7 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
     let input = if input.len() > 0 {
         input
     } else {
-        include_str!("../../data/13.input")
+        include_str!("../../data/DAY.input")
     };
 
     if part == 1 {

@@ -1,10 +1,11 @@
 use crate::Solution;
 
 pub fn solve(part: u8, input: &'static str) -> Solution {
-    let _input = if input.len() > 0 {
+    #![allow(unused)]
+    let input = if input.len() > 0 {
         input
     } else {
-        include_str!("../../data/02.input")
+        include_str!("../../data/03.input")
     };
 
     if part == 1 {
