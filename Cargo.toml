@@ -7,10 +7,14 @@ license = "GPL-3.0-or-later"
 description = "https://adventofcode.com/ repo for 2022"
 
 [dependencies]
-curl = "*"
 clap = { version = "4.0.*", features = ["derive", "env", "unicode", "cargo"] }
-itertools = "*"
+colored = "*"
+curl = "*"
+env_logger = "*"
+exitcode = "*"
 inpt = "*"
+itertools = "*"
+log = "*"
 
 [dev-dependencies]
 criterion = "0.4"

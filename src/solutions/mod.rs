@@ -1,4 +1,4 @@
-pub use super::Day;
+pub use crate::{Day, Solution};
 
 pub mod day01;
 pub mod day02;
@@ -26,7 +26,7 @@ pub mod day23;
 pub mod day24;
 pub mod day25;
 
-pub fn solve(day: Day, part: u8, input: &String) -> String {
+pub fn solve(day: Day, part: u8, input: &'static str) -> Solution {
     match day {
         1 => day01::solve(part, input),
         2 => day02::solve(part, input),
@@ -53,6 +53,6 @@ pub fn solve(day: Day, part: u8, input: &String) -> String {
         23 => day23::solve(part, input),
         24 => day24::solve(part, input),
         25 => day25::solve(part, input),
-        _ => String::from(""),
+        _ => Solution::Str(String::from("invalid day")),
     }
 }
