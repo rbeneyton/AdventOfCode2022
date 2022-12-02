@@ -22,3 +22,11 @@ cargo run --release -- --day <day> benchmark --number <number> --current
 
 double iterator::fold() can be used too, but…
 [Code](./src/solutions/day01.rs)
+
+## [Day 02: Rock Paper Scissors](https://adventofcode.com/2022/day/2)
+
+basic logic computation.
+
+Sadly inpt crate is slow (>500µs to parse 2500 inputs), so went back to
+"manual" parsing.
+[Code](./src/solutions/day02.rs)
