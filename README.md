@@ -30,3 +30,9 @@ basic logic computation.
 Sadly inpt crate is slow (>500µs to parse 2500 inputs), so went back to
 "manual" parsing.
 [Code](./src/solutions/day02.rs)
+
+
+## [Day 03: Rucksack Reorganization](https://adventofcode.com/2022/day/3)
+
+rust iterators playground…
+[Code](./src/solutions/day03.rs)
