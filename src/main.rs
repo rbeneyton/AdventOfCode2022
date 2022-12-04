@@ -132,6 +132,7 @@ fn main()
         }
         Command::Benchmark(o) => {
             let start_day = if o.current { args.day } else { 1 };
+            let mut acc = 0;
             for day in start_day..=args.day {
                 for part in [1, 2] {
                     let start = Instant::now();
@@ -140,9 +141,11 @@ fn main()
                     }
                     let elapsed = start.elapsed();
                     let elapsed = elapsed.as_micros() / o.number;
+                    acc += elapsed;
                     info!("day {:2} part {} elapsed: {:10}µs", day, part, elapsed);
                 }
             }
+            info!("        total elapsed: {:10}µs", acc);
             exitcode::OK
         },
     };
