@@ -40,3 +40,9 @@ rust iterators playground…
 
 range comparisons.
 [Code](./src/solutions/day04.rs)
+
+## [Day 05: Supply Stacks](https://adventofcode.com/2022/day/5)
+
+parsing harder than task.
+task 2 is in quick and dirty coded task 1.
+[Code](./src/solutions/day05.rs)
