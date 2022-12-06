@@ -46,3 +46,24 @@ range comparisons.
 parsing harder than task.
 task 2 is in quick and dirty coded task 1.
 [Code](./src/solutions/day05.rs)
+
+## [Day 06: Tuning Trouble](https://adventofcode.com/2022/day/6)
+
+scanning with 'appropriate' memory.
+naive code would have been:
+```rust
+use itertools::Itertools;
+
+Solution::U64(
+    input
+        .chars()
+        .tuple_windows()
+        .enumerate()
+        .skip_while(|(idx, (a, b, c, d))| ![a, b, c, d].iter().all_unique())
+        .map(|(idx, _)| (idx + 4) as u64)
+        .next()
+        .unwrap())
+```
+which is 145µs for simple 4 wide deep scan, but mine is 24µs.
+Difference with 14 deep would have been huge of course…
+[Code](./src/solutions/day06.rs)
