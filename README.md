@@ -74,4 +74,6 @@ Trees in rust are quite annoying to manipulate, so here is a basic hashmap based
 solution. Sadly this leads to too many string manipulations, we need a way to
 avoid them.
 Each part uses 165µs.
+
+update: new version using tree, and without any String, reduced to 46µs.
 [Code](./src/solutions/day07.rs)

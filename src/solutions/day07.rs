@@ -1,11 +1,32 @@
-use itertools::{
-    chain,
-    join,
-};
 use crate::Solution;
+use rustc_hash::FxHashMap;
+use std::rc::Rc;
+use std::cell::RefCell;
 
-pub type Dir<K, V> = rustc_hash::FxHashMap<K, V>;
-// pub type Dir<K, V> = std::collections::BTreeMap<K, V>; // for debug
+#[derive(Default)]
+struct Dir {
+    content : FxHashMap<&'static str, Rc<RefCell<Self>>>,
+    size: u64,
+}
+impl Dir {
+    pub fn sum_small_node(&self) -> u64 {
+        let mut res = if self.size <= 100000 { self.size } else { 0 };
+        for (_, child) in &self.content {
+            res += child.borrow().sum_small_node();
+        }
+        res
+    }
+    pub fn min_greater_than(&self, to_free : u64) -> u64 {
+        let mut res = u64::MAX;
+        if self.size > to_free {
+            res = std::cmp::min(self.size, res);
+        }
+        for (_, child) in &self.content {
+            res = std::cmp::min(res, child.borrow().min_greater_than(to_free));
+        }
+        res
+    }
+}
 
 pub fn solve(part: u8, input: &'static str) -> Solution {
     #![allow(unused)]
@@ -16,68 +37,45 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
     };
 
     // fill tree
-    let root = vec!["",];
-    let mut pwd = Vec::new();
-    let mut sizes = Dir::default();
-    let mut node = sizes.entry(String::from("")).or_insert(0);
+    let root = Rc::new(RefCell::new(Dir::default()));
+    let mut pwd = vec![root.clone()];
     for line in input.lines() {
         if line.starts_with("$ cd ") {
             match line.chars().skip(5).next().unwrap() {
-                '/' => { pwd.clear(); },
+                '/' => { pwd.truncate(1); },
                 '.' => { pwd.pop(); },
-                _ => { pwd.push(&line[5..]); },
+                _ => {
+                    let new_dir = Rc::new(RefCell::new(Dir::default()));
+                    // XXX check if already defined/visited
+                    debug_assert!(!pwd.last_mut().unwrap().borrow_mut().content.contains_key(&line[5..]));
+                    pwd.last_mut().unwrap().borrow_mut().content.insert(&line[5..], new_dir.clone());
+                    pwd.push(new_dir);
+                },
             }
-            let path = join(chain(&root, &pwd), "/");
-            node = sizes.entry(path).or_insert(0);
         } else {
             if line.chars().next().unwrap().is_digit(10) {
                 let sz = line.split_whitespace().next().unwrap().parse::<u64>();
                 if let Ok(sz) = sz {
-                    *node += sz;
+                    for dir in &pwd {
+                        dir.borrow_mut().size += sz;
+                    }
                 }
             }
         }
     }
 
-    // fill accumulative tree
-    let mut acc_sizes = Dir::default();
-    for (path, sz) in sizes {
-        acc_sizes.entry(path.clone()).or_insert(sz);
-        let mut dir = path.clone();
-        while let Some(trailing) = dir.rfind('/') {
-            dir.split_off(trailing);
-            let node = acc_sizes.entry(dir.clone()).or_insert(0);
-            *node += sz;
-        }
-    }
-
     if part == 1 {
-        Solution::U64(acc_sizes
-            .iter()
-            .filter_map(|(path, sz)| if path.len() > 0 && *sz <= 100000 {
-                Some(*sz)
-            } else {
-                None
-            })
-            .sum())
+        Solution::U64(root.borrow().sum_small_node())
     } else {
         const SPACE : u64 = 70000000;
         const REQUIRED : u64 = 30000000;
-        let used = *acc_sizes.get(&String::from("")).unwrap();
+        let used = root.borrow().size;
         debug_assert!(used < SPACE);
         let free = SPACE - used;
         debug_assert!(free < REQUIRED);
         let to_free = REQUIRED - free;
 
-        Solution::U64(acc_sizes
-            .iter()
-            .filter_map(|(_, sz)| if *sz >= to_free {
-                Some(*sz)
-            } else {
-                None
-            })
-            .min()
-            .unwrap())
+        Solution::U64(root.borrow().min_greater_than(to_free))
     }
 }
 
