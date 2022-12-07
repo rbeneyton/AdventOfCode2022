@@ -67,3 +67,11 @@ Solution::U64(
 which is 145µs for simple 4 wide deep scan, but mine is 24µs.
 Difference with 14 deep would have been huge of course…
 [Code](./src/solutions/day06.rs)
+
+## [Day 07: No Space Left On Device](https://adventofcode.com/2022/day/7)
+
+Trees in rust are quite annoying to manipulate, so here is a basic hashmap based
+solution. Sadly this leads to too many string manipulations, we need a way to
+avoid them.
+Each part uses 165µs.
+[Code](./src/solutions/day07.rs)

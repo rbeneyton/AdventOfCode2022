@@ -15,6 +15,7 @@ exitcode = "*"
 inpt = "*"
 itertools = "*"
 log = "*"
+rustc-hash = "*"
 
 [dev-dependencies]
 criterion = "0.4"
