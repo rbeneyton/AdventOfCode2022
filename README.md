@@ -77,3 +77,10 @@ Each part uses 165µs.
 
 update: new version using tree, and without any String, reduced to 46µs.
 [Code](./src/solutions/day07.rs)
+
+
+## [Day 08: Treetop Tree House](https://adventofcode.com/2022/day/8)
+
+inplace bitmask in a grid, to save as space as possible.
+
+[Code](./src/solutions/day08.rs)
