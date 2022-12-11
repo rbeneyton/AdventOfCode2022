@@ -95,33 +95,32 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
         for row in 1..n_ {
             // {{{ RIGHT
             // digit scanner grid
-            let mut scans = [None; 10];
+            let mut scans = [0; 10];
             for col in 1..n_ {
                 // invariant: scans always contains next position of 'digit'
                 for scol in (col + 1)..n_ {
                     let digit = (grid[idx_of(scol, row)]) as usize;
-                    if scans[digit].is_none() || scans[digit].unwrap() <= col {
-                        scans[digit] = Some(scol);
-                        if (0..10).filter(|d| scans[*d].is_some()).count() == 10 {
+                    if scans[digit] <= col {
+                        scans[digit] = scol;
+                        if (0..10).filter(|d| scans[*d] > col).count() == 10 {
                             break;
                         }
                     }
                 }
+                // avoid continuous miss scan
+                for d in 0..10 {
+                    if scans[d] <= col {
+                        scans[d] = n_;
+                    }
+                }
+
                 let digit = (grid[idx_of(col, row)]) as usize;
                 // greater tree
                 let (upper_idx, upper_digit) = (digit..10)
-                        .filter_map(|d| if let Some(v) = scans[d] {
-                            if v > col {
-                                Some((v, d))
-                            } else {
-                                None
-                            }
-                        } else {
-                            None
-                        })
+                    .map(|d| (scans[d], d))
                     .min_by(|a, b| a.0.cmp(&b.0))
-                    .unwrap_or((n_, 10));
-                    debug_assert!(upper_idx >= col);
+                    .expect("should not happen");
+                debug_assert!(upper_idx >= col);
                 // same size tree case
                 let dist = if upper_digit == digit {
                     upper_idx - col
@@ -134,32 +133,30 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
             // }}}
             // {{{ LEFT
             // digit scanner grid
-            let mut scans = [None; 10];
+            let mut scans = [n; 10];
             for col in (1..n_).rev() {
                 // invariant: scans always contains next position of 'digit'
                 for scol in (1..(col - 1)).rev() {
                     let digit = (grid[idx_of(scol, row)]) as usize;
-                    if scans[digit].is_none() || scans[digit].unwrap() >= col {
-                        scans[digit] = Some(scol);
-                        if (0..10).filter(|d| scans[*d].is_some()).count() == 10 {
+                    if scans[digit] >= col {
+                        scans[digit] = scol;
+                        if (0..10).filter(|d| scans[*d] < col).count() == 10 {
                             break;
                         }
+                    }
+                }
+                // avoid continuous miss scan
+                for d in 0..10 {
+                    if scans[d] >= col {
+                        scans[d] = 0;
                     }
                 }
                 let digit = (grid[idx_of(col, row)]) as usize;
                 // greater tree
                 let (upper_idx, upper_digit) = (digit..10)
-                        .filter_map(|d| if let Some(v) = scans[d] {
-                            if v < col {
-                                Some((v, d))
-                            } else {
-                                None
-                            }
-                        } else {
-                            None
-                        })
+                    .map(|d| (scans[d], d))
                     .max_by(|a, b| a.0.cmp(&b.0))
-                    .unwrap_or((0, 10));
+                    .expect("should not happen");
                 debug_assert!(upper_idx <= col);
                 // same size tree case
                 let dist = if upper_digit == digit {
@@ -172,94 +169,107 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
             // }}}
         }
 
-        // let mut grid_rot = Vec::new();
-        // grid_rot.resize(n * n, 0u8);
-        // for row in 1..n_ {
-        //     for col in 1..n_ {
-        //         grid_rot[idx_of(row, col)] = grid[idx_of(col, row)];
-        //     }
-        // }
-        // let grid = grid_rot;
+        println!("A");
+        for row in 1..n_ {
+            for col in 1..n_ {
+                print!("{} ", score[idx_of(row, col)]);
+            }
+            println!("");
+        }
 
-        // for row in 1..n_ {
-        //     // {{{ RIGHT
-        //     // digit scanner grid
-        //     let mut scans = [None; 10];
-        //     for col in 1..n_ {
-        //         // invariant: scans always contains next position of 'digit'
-        //         for scol in (col + 1)..n_ {
-        //             let digit = (grid[idx_of(scol, row)]) as usize;
-        //             if scans[digit].is_none() || scans[digit].unwrap() <= col {
-        //                 scans[digit] = Some(scol);
-        //                 if (0..10).filter(|d| scans[*d].is_some()).count() == 10 {
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         let digit = (grid[idx_of(col, row)]) as usize;
-        //         // greater tree
-        //         let (upper_idx, upper_digit) = (digit..10)
-        //                 .filter_map(|d| if let Some(v) = scans[d] {
-        //                     if v > col {
-        //                         Some((v, d))
-        //                     } else {
-        //                         None
-        //                     }
-        //                 } else {
-        //                     None
-        //                 })
-        //             .min_by(|a, b| a.0.cmp(&b.0))
-        //             .unwrap_or((n_, 10));
-        //             debug_assert!(upper_idx >= col);
-        //         // same size tree case
-        //         let dist = if upper_digit == digit {
-        //             upper_idx - col
-        //         } else {
-        //             debug_assert!(upper_digit > digit);
-        //             upper_idx - col - 1
-        //         };
-        //         score[idx_of(row, col)] *= dist as u32;
-        //     }
-        //     // }}}
-        //     // {{{ LEFT
-        //     // digit scanner grid
-        //     let mut scans = [None; 10];
-        //     for col in (1..n_).rev() {
-        //         // invariant: scans always contains next position of 'digit'
-        //         for scol in (1..(col - 1)).rev() {
-        //             let digit = (grid[idx_of(scol, row)]) as usize;
-        //             if scans[digit].is_none() || scans[digit].unwrap() >= col {
-        //                 scans[digit] = Some(scol);
-        //                 if (0..10).filter(|d| scans[*d].is_some()).count() == 10 {
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         let digit = (grid[idx_of(col, row)]) as usize;
-        //         // greater tree
-        //         let (upper_idx, upper_digit) = (digit..10)
-        //                 .filter_map(|d| if let Some(v) = scans[d] {
-        //                     if v < col {
-        //                         Some((v, d))
-        //                     } else {
-        //                         None
-        //                     }
-        //                 } else {
-        //                     None
-        //                 })
-        //             .max_by(|a, b| a.0.cmp(&b.0))
-        //             .unwrap_or((0, 10));
-        //         debug_assert!(upper_idx <= col);
-        //         // same size tree case
-        //         let dist = if upper_digit == digit {
-        //             col - upper_idx
-        //         } else {
-        //             col - 1 - upper_idx
-        //         };
-        //         score[idx_of(row, col)] *= dist as u32;
-        //     }
-        //     // }}}
-        // }
+        let mut grid_rot = Vec::new();
+        grid_rot.resize(n * n, 0u8);
+        for row in 1..n_ {
+            for col in 1..n_ {
+                grid_rot[idx_of(row, col)] = grid[idx_of(col, row)];
+            }
+        }
+        let grid = grid_rot;
+
+        for row in 1..n_ {
+            // {{{ RIGHT
+            // digit scanner grid
+            let mut scans = [0; 10];
+            for col in 1..n_ {
+                // invariant: scans always contains next position of 'digit'
+                for scol in (col + 1)..n_ {
+                    let digit = (grid[idx_of(scol, row)]) as usize;
+                    if scans[digit] <= col {
+                        scans[digit] = scol;
+                        if (0..10).filter(|d| scans[*d] > col).count() == 10 {
+                            break;
+                        }
+                    }
+                }
+                // avoid continuous miss scan
+                for d in 0..10 {
+                    if scans[d] <= col {
+                        scans[d] = n_;
+                    }
+                }
+
+                let digit = (grid[idx_of(col, row)]) as usize;
+                // greater tree
+                let (upper_idx, upper_digit) = (digit..10)
+                    .map(|d| (scans[d], d))
+                    .min_by(|a, b| a.0.cmp(&b.0))
+                    .expect("should not happen");
+                debug_assert!(upper_idx >= col);
+                // same size tree case
+                let dist = if upper_digit == digit {
+                    upper_idx - col
+                } else {
+                    debug_assert!(upper_digit > digit);
+                    upper_idx - col - 1
+                };
+                score[idx_of(row, col)] *= dist as u32;
+            }
+            // }}}
+            // {{{ LEFT
+            // digit scanner grid
+            let mut scans = [n_; 10];
+            for col in (1..n_).rev() {
+                // invariant: scans always contains next position of 'digit'
+                for scol in (1..(col - 1)).rev() {
+                    let digit = (grid[idx_of(scol, row)]) as usize;
+                    if scans[digit] >= col {
+                        scans[digit] = scol;
+                        if (0..10).filter(|d| scans[*d] < col).count() == 10 {
+                            break;
+                        }
+                    }
+                }
+                // avoid continuous miss scan
+                for d in 0..10 {
+                    if scans[d] >= col {
+                        scans[d] = 0;
+                    }
+                }
+                let digit = (grid[idx_of(col, row)]) as usize;
+                // greater tree
+                let (upper_idx, upper_digit) = (digit..10)
+                    .map(|d| (scans[d], d))
+                    .max_by(|a, b| a.0.cmp(&b.0))
+                    .expect("should not happen");
+                debug_assert!(upper_idx <= col);
+                // same size tree case
+                let dist = if upper_digit == digit {
+                    col - upper_idx
+                } else {
+                    col - 1 - upper_idx
+                };
+                score[idx_of(row, col)] *= dist as u32;
+            }
+            // }}}
+        }
+
+        println!("B");
+        for row in 1..n_ {
+            for col in 1..n_ {
+                print!("{} ", score[idx_of(row, col)]);
+            }
+            println!("");
+        }
 
         // for col in 1..n_ {
         //     // {{{ DOWN
