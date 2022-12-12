@@ -91,3 +91,9 @@ basic movement computations.
 
 [Code](./src/solutions/day09.rs)
 
+## [Day 10: Cathode-Ray Tube](https://adventofcode.com/2022/day/10)
+
+CPU register simulation, nothing special.
+
+[Code](./src/solutions/day10.rs)
+
