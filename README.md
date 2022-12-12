@@ -84,3 +84,10 @@ update: new version using tree, and without any String, reduced to 46µs.
 inplace bitmask in a grid, to save as space as possible.
 
 [Code](./src/solutions/day08.rs)
+
+## [Day 09: Rope Bridge](https://adventofcode.com/2022/day/9)
+
+basic movement computations.
+
+[Code](./src/solutions/day09.rs)
+
