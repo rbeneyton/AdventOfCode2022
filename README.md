@@ -97,3 +97,10 @@ CPU register simulation, nothing special.
 
 [Code](./src/solutions/day10.rs)
 
+## [Day 11: Monkey in the Middle](https://adventofcode.com/2022/day/11)
+
+Unkown game, plenty of subtle unsaid conditions, weird parsing for no reason, …
+I should have done the atcoder.jp game.
+
+[Code](./src/solutions/day11.rs)
+
