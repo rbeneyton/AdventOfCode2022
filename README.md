@@ -104,3 +104,9 @@ I should have done the atcoder.jp game.
 Solution weren't prime factor decomposition as I first guessed, but simple lowering value by detecting invariant!
 
 [Code](./src/solutions/day11.rs)
+
+## [Day 12: Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)
+
+path searching, basic Dijkstra
+
+[Code](./src/solutions/day12.rs)
