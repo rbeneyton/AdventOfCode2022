@@ -101,6 +101,6 @@ CPU register simulation, nothing special.
 
 Unkown game, plenty of subtle unsaid conditions, weird parsing for no reason, …
 I should have done the atcoder.jp game.
+Solution weren't prime factor decomposition as I first guessed, but simple lowering value by detecting invariant!
 
 [Code](./src/solutions/day11.rs)
-
