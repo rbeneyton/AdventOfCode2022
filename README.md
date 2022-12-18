@@ -110,3 +110,9 @@ Solution weren't prime factor decomposition as I first guessed, but simple lower
 path searching, basic Dijkstra
 
 [Code](./src/solutions/day12.rs)
+
+## [Day 13: Distress Signal](https://adventofcode.com/2022/day/13)
+
+parsing possible without recursion
+
+[Code](./src/solutions/day13.rs)
