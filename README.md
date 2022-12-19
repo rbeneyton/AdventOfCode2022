@@ -116,3 +116,11 @@ path searching, basic Dijkstra
 parsing possible without recursion
 
 [Code](./src/solutions/day13.rs)
+
+## [Day 14: Regolith Reservoir](https://adventofcode.com/2022/day/14)
+
+sand going down
+memory align to falling sand.
+no optimization to fill next to our current position (so… 6ms for part2!).
+
+[Code](./src/solutions/day14.rs)
