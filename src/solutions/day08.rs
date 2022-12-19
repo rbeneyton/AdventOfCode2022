@@ -169,13 +169,13 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
             // }}}
         }
 
-        println!("A");
-        for row in 1..n_ {
-            for col in 1..n_ {
-                print!("{} ", score[idx_of(row, col)]);
-            }
-            println!("");
-        }
+        // println!("A");
+        // for row in 1..n_ {
+        //     for col in 1..n_ {
+        //         print!("{} ", score[idx_of(row, col)]);
+        //     }
+        //     println!("");
+        // }
 
         let mut grid_rot = Vec::new();
         grid_rot.resize(n * n, 0u8);
@@ -263,13 +263,13 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
             // }}}
         }
 
-        println!("B");
-        for row in 1..n_ {
-            for col in 1..n_ {
-                print!("{} ", score[idx_of(row, col)]);
-            }
-            println!("");
-        }
+        // println!("B");
+        // for row in 1..n_ {
+        //     for col in 1..n_ {
+        //         print!("{} ", score[idx_of(row, col)]);
+        //     }
+        //     println!("");
+        // }
 
         // for col in 1..n_ {
         //     // {{{ DOWN
