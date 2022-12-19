@@ -124,3 +124,10 @@ memory align to falling sand.
 no optimization to fill next to our current position (so… 6ms for part2!).
 
 [Code](./src/solutions/day14.rs)
+
+## [Day 15: Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)
+
+part 1: basic geometry, but text was vague about becons already on the line.
+part 2 optimization: only edges of covered zones, with big step when possible, 3.5ms.
+
+[Code](./src/solutions/day15.rs)
