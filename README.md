@@ -131,3 +131,10 @@ part 1: basic geometry, but text was vague about becons already on the line.
 part 2 optimization: only edges of covered zones, with big step when possible, 3.5ms.
 
 [Code](./src/solutions/day15.rs)
+
+## [Day 16: Proboscidea Volcanium](https://adventofcode.com/2022/day/16)
+
+part 1: astar is coming
+part 2:
+
+[Code](./src/solutions/day16.rs)
