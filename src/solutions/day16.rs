@@ -1,6 +1,7 @@
 use crate::Solution;
 use rustc_hash::FxHashMap;
 use std::cmp;
+use partial_sort::PartialSort;
 
 // {{{ Valve
 
@@ -224,6 +225,7 @@ pub struct State2 {
     acc_rate : usize,
     open : [bool; MAX_VALVES],
     actors : [StateInt; 2],
+    utility : usize,
 }
 
 impl Default for State2 {
@@ -232,6 +234,7 @@ impl Default for State2 {
             acc_rate : 0,
             open : [false; MAX_VALVES],
             actors : [StateInt::default(); 2],
+            utility : 0,
         }
     }
 }
@@ -258,17 +261,27 @@ impl State2 {
         self
     }
 
-    pub fn utility(&self, utility : &Vec<usize>) -> usize {
-        2 * self.acc_rate
-        + utility[self.actors[0].cur_valve]
-        + utility[self.actors[1].cur_valve]
+    pub fn compute_utility(&mut self,
+        valves : &Valves,
+        distances : &FxHashMap<(usize, usize), usize>)
+    {
+        self.utility = 0;
+        // distance to closed valves
+        for to in valves.iter().filter(|x| !self.open[x.idx]) {
+            for actor in &self.actors {
+                let from = actor.cur_valve;
+                let dist = *distances.get(&(from, to.idx)).unwrap();
+                self.utility += to.rate / (1 + dist).pow(2);
+            }
+        }
+        // score
+        self.utility += self.acc_rate * 10;
     }
 }
 
 impl Ord for State2 {
     fn cmp(&self, other: &State2) -> cmp::Ordering {
-        other.acc_rate.cmp(&self.acc_rate)
-            //.then_with(|| other.dist.cmp(&self.dist)) // min distance
+        other.utility.cmp(&self.utility)
     }
 }
 
@@ -342,15 +355,15 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
     // }}}
     // {{{ compute utility vector
 
-    let mut utility = Vec::default();
-    utility.resize(valves.len(), 0);
-    for from in &valves {
-        utility[from.idx] += from.rate;
-        for to in &valves {
-            let dist : usize = *distances.get(&(from.idx, to.idx)).unwrap();
-            utility[from.idx] += to.rate / (1 + dist).pow(2);
-        }
-    }
+    // let mut utility = Vec::default();
+    // utility.resize(valves.len(), 0);
+    // for from in &valves {
+    //     utility[from.idx] += from.rate;
+    //     for to in &valves {
+    //         let dist : usize = *distances.get(&(from.idx, to.idx)).unwrap();
+    //         utility[from.idx] += to.rate / (1 + dist).pow(2);
+    //     }
+    // }
 
     // for from in 0..valves.len() {
     //     print!("{:02} ", valves[from].rate);
@@ -364,6 +377,7 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
     // }}}
 
     if part == 1 {
+        // {{{ part 1
         let mut state = State1::default();
         state.cur_valve = valve_of("AA").idx;
         state.seq[state.seq_sz] = state.cur_valve;
@@ -406,6 +420,7 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
             .map(|x| x.acc_rate)
             .max()
             .unwrap())
+        // }}}
     } else {
         let mut state = State2::default();
         for actor in state.actors.iter_mut() {
@@ -465,9 +480,15 @@ pub fn solve(part: u8, input: &'static str) -> Solution {
                 panic!("");
                 break;
             }
-            tos.sort_by(|a, b| b.utility(&utility).cmp(&a.utility(&utility)));
             println!("time:{} len:{}", time, tos.len());
-            tos.truncate(200_000);
+            const BEAM : usize = 200_000;
+            if tos.len() > BEAM {
+                for to in tos.iter_mut() {
+                    to.compute_utility(&valves, &distances);
+                }
+                tos.partial_sort(200_000, |a, b| a.cmp(b));
+                tos.truncate(200_000);
+            }
 
             std::mem::swap(&mut froms, &mut tos);
         }

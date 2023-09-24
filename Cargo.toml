@@ -16,6 +16,7 @@ inpt = "*"
 itertools = "*"
 log = "*"
 rustc-hash = "*"
+partial_sort = "*"
 
 [dev-dependencies]
 criterion = "0.4"
